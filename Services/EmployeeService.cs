@@ -43,6 +43,20 @@ namespace EmployeeManagement.Services
 
         }
 
+        public async Task<Boolean> LoginEmployeeAsync(LoginDto loginDto)
+        {
+            var getUser = await _employeeRepository.GetEmployeeByEmail(loginDto.Email);
+            if (getUser == null)
+            {
+                throw new Exception ($"Invalid Login {loginDto.Email}");
+            }
+
+            var validPassword = VerifyPasswordHash(loginDto.Password , getUser.PasswordHash, getUser.PasswordSalt);
+
+            return validPassword;
+
+        }
+
         private void CreatePasswordHash(string password, out string passwordHash, out string passwordSalt)
         {
             using var hmac = new HMACSHA512();
@@ -53,5 +67,19 @@ namespace EmployeeManagement.Services
             passwordSalt = Convert.ToBase64String(saltBytes);
             passwordHash = Convert.ToBase64String(hashBytes);
         }
+
+        private bool VerifyPasswordHash(string password, string storedHash, string storedSalt)
+        {
+            byte[] saltBytes = Convert.FromBase64String(storedSalt);
+
+            using var hmac = new HMACSHA512(saltBytes);
+
+            byte[] computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            string computedHashString = Convert.ToBase64String(computedHash);
+
+            return computedHashString == storedHash;
+        }
+
+
     }
 }
