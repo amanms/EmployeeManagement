@@ -5,28 +5,22 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagement.Controllers
 {
-    [Route("Api/[controller]")]
-    public class EmployeeController:ControllerBase
+    [Route("Api")]
+    public class EmployeeController : ControllerBase
     {
         private readonly IEmployeeService _employeeService;
-        public EmployeeController(IEmployeeService employeeService)
+        public EmployeeController(IEmployeeService employeeService) 
         {
             _employeeService = employeeService;
-
         }
 
-        [HttpPost("Register")]
-        public async Task<IActionResult> RegisterEmployeeAsync([FromBody] EmployeeDto employeeDto)
+        [HttpPost("Role")]
+
+        public async Task<IActionResult> AddRoleAsync([FromBody]CreateRole createRole)
         {
-            await _employeeService.RegisterEmployeeAsync(employeeDto);
-            return Ok("registered successfully");
+            await _employeeService.AddRoleAsync(createRole);
+            return Ok("Registered successfully");
         }
 
-        [HttpPost("Login")]
-        public async Task<IActionResult> LoginEmployeeAsync([FromBody] LoginDto loginDto)
-        {
-            var result = await _employeeService.LoginEmployeeAsync(loginDto);
-            return Ok(result);
-        }
     }
 }

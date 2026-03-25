@@ -15,7 +15,10 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>
     (options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<IAuthService , AuthService>();
+
+builder.Services.AddScoped<IEmployeeRepository , EmployeeRepository>();
 builder.Services.AddScoped<IEmployeeService , EmployeeService>();
 
 builder.Services.AddScoped<JwtTokenGenerator>();
