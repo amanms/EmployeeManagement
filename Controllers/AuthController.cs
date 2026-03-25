@@ -1,0 +1,32 @@
+﻿using EmployeeManagement.Model.DTOs;
+using EmployeeManagement.Services.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+
+namespace EmployeeManagement.Controllers
+{
+    [Route("Api/[controller]")]
+    public class AuthController:ControllerBase
+    {
+        private readonly IAuthService _employeeService;
+        public AuthController(IAuthService employeeService)
+        {
+            _employeeService = employeeService;
+
+        }
+
+        [HttpPost("Register")]
+        public async Task<IActionResult> RegisterEmployeeAsync([FromBody] EmployeeDto employeeDto)
+        {
+            await _employeeService.RegisterEmployeeAsync(employeeDto);
+            return Ok("registered successfully");
+        }
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> LoginEmployeeAsync([FromBody] LoginDto loginDto)
+        {
+            var result = await _employeeService.LoginEmployeeAsync(loginDto);
+            return Ok(result);
+        }
+    }
+}

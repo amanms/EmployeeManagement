@@ -8,9 +8,11 @@ namespace EmployeeManagement.Services
     public class EmployeeService:IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
-        public EmployeeService(IEmployeeRepository employeeRepository) 
+        private readonly IAuthRepository _authRepository;
+        public EmployeeService(IEmployeeRepository employeeRepository , IAuthRepository authRepository) 
         { 
             _employeeRepository = employeeRepository;
+            _authRepository = authRepository;
         }
 
         public async Task AddRoleAsync(CreateRole createRole)
@@ -31,6 +33,42 @@ namespace EmployeeManagement.Services
             };
             
             await _employeeRepository.AddRoleAsync(newRole);
+        }
+
+        public async Task UpdateEmployeeAsync(int id, UpdateEmployeeDto updateEmployeeDto)
+        {
+            var getEmployee = await _employeeRepository.GetEmployeeByIdAsync(id);
+            if(getEmployee == null)
+            {
+                throw new Exception("Employee Not found");
+            }
+
+            var getEmployeeByEmail = await _authRepository.GetEmployeeByEmail(updateEmployeeDto.EmployeeEmail);
+            if(getEmployeeByEmail != null && getEmployeeByEmail.EmployeeId != id)
+            {
+                throw new Exception("Email already exists");
+            }
+
+
+            getEmployee.EmployeeFirstName = updateEmployeeDto.EmployeeFirstName;
+            getEmployee.EmployeeLastName = updateEmployeeDto.EmployeeLastName;
+            getEmployee.EmployeeEmail = updateEmployeeDto.EmployeeEmail;
+            getEmployee.UpdatedAt = DateTime.UtcNow;
+            
+
+            await _employeeRepository.UpdateEmployeeAsync(getEmployee);
+        }
+
+        public async Task DeleteEmployeeAsync(int id)
+        {
+            var getEmployee = await _employeeRepository.GetEmployeeByIdAsync(id);
+            if (getEmployee == null)
+            {
+                throw new Exception("Employee Not found");
+            }
+            getEmployee.IsDeleted = true; ;
+
+            await _employeeRepository.DeleteEmployeeAsync(getEmployee);
         }
 
     }

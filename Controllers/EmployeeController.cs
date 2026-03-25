@@ -22,5 +22,19 @@ namespace EmployeeManagement.Controllers
             return Ok("Registered successfully");
         }
 
+        [HttpPut("Employee/{id}")]
+        public async Task<IActionResult> UpdateEmployeeAsync(int id , [FromBody] UpdateEmployeeDto updateEmployeeDto)
+        {
+            await _employeeService.UpdateEmployeeAsync(id, updateEmployeeDto);
+            return Ok("Employee updated successfully");
+        }
+
+        [HttpPut("Delete/{id}")]
+        public async Task<IActionResult> DeleteEmployeeAsync(int id)
+        {
+            await _employeeService.DeleteEmployeeAsync(id);
+            return Ok("Employee deleted");
+        }
+
     }
 }
