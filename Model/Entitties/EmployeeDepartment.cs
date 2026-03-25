@@ -3,8 +3,8 @@
     public class EmployeeDepartment
     {
         public int EmployeeDepartmentId { get; set; }
-        public int EmployeeId { get; set; }
-        public int DepartmentId { get; set; }
+        public int? EmployeeId { get; set; }
+        public int? DepartmentId { get; set; }
         public DateTime CreatedAt { get; set; } 
         public DateTime UpdatedAt { get; set; } 
         public bool IsDeleted { get; set; } 

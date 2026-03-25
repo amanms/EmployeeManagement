@@ -71,6 +71,16 @@ namespace EmployeeManagement.Data
             modelBuilder.Entity<Department>()
                 .Property(ed => ed.IsDeleted)
                 .HasDefaultValue(false);
+
+            modelBuilder.Entity<Employee>()
+                .Property(e => e.CreatedAt)
+                .HasDefaultValueSql("GETUTCDATE()");
+
+            modelBuilder.Entity<Employee>()
+                .Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("GETUTCDATE()");
+            
+            
         }
     }
 }
