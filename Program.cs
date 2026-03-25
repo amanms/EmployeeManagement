@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using EmployeeManagement.Data;
 using EmployeeManagement.Repository.Interfaces;
 using EmployeeManagement.Repository;
 using Microsoft.EntityFrameworkCore;
 using EmployeeManagement.Services.Interfaces;
 using EmployeeManagement.Services;
+using EmployeeManagement.Helpers;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -15,6 +17,8 @@ builder.Services.AddDbContext<ApplicationDbContext>
 
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IEmployeeService , EmployeeService>();
+
+builder.Services.AddScoped<JwtTokenGenerator>();
 
 
 var app = builder.Build();
