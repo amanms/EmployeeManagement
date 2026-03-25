@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using EmployeeManagement.Helpers;
 using EmployeeManagement.Model.DTOs;
 using EmployeeManagement.Model.Entitties;
 using EmployeeManagement.Repository.Interfaces;
@@ -11,10 +12,12 @@ namespace EmployeeManagement.Services
     public class EmployeeService:IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly JwtTokenGenerator _jwt;
 
-        public EmployeeService(IEmployeeRepository employeeRepository)
+        public EmployeeService(IEmployeeRepository employeeRepository, JwtTokenGenerator jwt)
         {
             _employeeRepository = employeeRepository;
+            _jwt = jwt;
         }
         public async Task RegisterEmployeeAsync(EmployeeDto employeeDto)
         {
@@ -43,7 +46,7 @@ namespace EmployeeManagement.Services
 
         }
 
-        public async Task<Boolean> LoginEmployeeAsync(LoginDto loginDto)
+        public async Task<GetTokenDto> LoginEmployeeAsync(LoginDto loginDto)
         {
             var getUser = await _employeeRepository.GetEmployeeByEmail(loginDto.Email);
             if (getUser == null)
@@ -53,7 +56,30 @@ namespace EmployeeManagement.Services
 
             var validPassword = VerifyPasswordHash(loginDto.Password , getUser.PasswordHash, getUser.PasswordSalt);
 
-            return validPassword;
+            if (!validPassword)
+            {
+                throw new Exception("Invalid credentials");
+            }
+
+            var getEmployee = new GetEmployeeDto
+            {
+                EmployeeId = getUser.EmployeeId,
+                EmployeeFirstName = getUser.EmployeeFirstName,
+                EmployeeLastName = getUser.EmployeeLastName,
+                EmployeeEmail = getUser.EmployeeEmail,
+
+            };
+
+            var accessToken = _jwt.GenerateToken(getEmployee);
+            var refreshToken = GenerateRefreshToken();
+
+            var jwtToken = new GetTokenDto
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken
+            };
+
+            return jwtToken;
 
         }
 
@@ -80,6 +106,12 @@ namespace EmployeeManagement.Services
             return computedHashString == storedHash;
         }
 
-
+        private string GenerateRefreshToken()
+        {
+            var bytes = new byte[64];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(bytes);
+            return Convert.ToBase64String(bytes);
+        }
     }
 }

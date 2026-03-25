@@ -25,12 +25,8 @@ namespace EmployeeManagement.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> LoginEmployeeAsync([FromBody] LoginDto loginDto)
         {
-            var isValid = await _employeeService.LoginEmployeeAsync(loginDto);
-            if (!isValid)
-            {
-                return BadRequest("Invalid credentials");
-            }
-            return Ok("Logged In Successfully");
+            var result = await _employeeService.LoginEmployeeAsync(loginDto);
+            return Ok(result);
         }
     }
 }

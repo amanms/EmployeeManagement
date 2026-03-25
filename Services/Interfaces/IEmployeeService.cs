@@ -4,6 +4,6 @@ namespace EmployeeManagement.Services.Interfaces
     public interface IEmployeeService
     {
         Task RegisterEmployeeAsync(EmployeeDto employeeDto);
-        Task<Boolean> LoginEmployeeAsync(LoginDto loginDto);
+        Task<GetTokenDto> LoginEmployeeAsync(LoginDto loginDto);
     }
 }
