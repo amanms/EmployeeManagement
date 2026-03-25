@@ -1,32 +1,30 @@
-﻿using EmployeeManagement.Repository.Interfaces;
+﻿using EmployeeManagement.Data;
 using EmployeeManagement.Model.Entitties;
-using EmployeeManagement.Data;
+using EmployeeManagement.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManagement.Repository
 {
-    public class EmployeeRepository:IEmployeeRepository
+    public class EmployeeRepository : IEmployeeRepository
     {
         private readonly ApplicationDbContext _context;
-
         public EmployeeRepository(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task RegisterEmployeeAsync(Employee employee)
+        public async Task AddRoleAsync(Role role)
         {
-            await _context.Employees.AddAsync(employee);
+            await _context.Roles.AddAsync(role);
             await _context.SaveChangesAsync();
 
         }
 
-        public async Task<Employee?> GetEmployeeByEmail(string email)
+        public async Task<Role> GetRoleAsync(string roleName)
         {
-            return await _context.Employees
-                .AsNoTracking()
-                .FirstOrDefaultAsync(emp => emp.EmployeeEmail == email && !emp.IsDeleted);
+            var role = await _context.Roles.AsNoTracking().
+                FirstOrDefaultAsync(r=>r.RoleName == roleName && !r.IsDeleted);
+            return role;
         }
-
     }
 }

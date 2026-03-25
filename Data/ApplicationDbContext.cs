@@ -79,8 +79,23 @@ namespace EmployeeManagement.Data
             modelBuilder.Entity<Employee>()
                 .Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("GETUTCDATE()");
-            
-            
+
+            modelBuilder.Entity<Role>()
+                .Property(r => r.CreatedAt)
+                .HasDefaultValueSql("GETUTCDATE()");
+            modelBuilder.Entity<Role>()
+                .Property(r => r.UpdatedAt)
+                .HasDefaultValueSql("GETUTCDATE()");
+
+            modelBuilder.Entity<EmployeeRole>()
+                .Property(er => er.CreatedAt)
+                .HasDefaultValueSql("GETUTCDATE()");
+            modelBuilder.Entity<EmployeeRole>()
+                .Property(er => er.UpdatedAt)
+                .HasDefaultValueSql("GETUTCDATE()");
+
+
+
         }
     }
 }
