@@ -6,5 +6,9 @@ namespace EmployeeManagement.Repository.Interfaces
     {
         Task AddRoleAsync(Role role);
         Task<Role> GetRoleAsync(string roleName);
+
+        Task<Employee> GetEmployeeByIdAsync(int id);
+        Task UpdateEmployeeAsync(Employee employee);
+        Task DeleteEmployeeAsync(Employee employee);
     }
 }
