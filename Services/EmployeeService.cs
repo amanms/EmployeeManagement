@@ -71,5 +71,36 @@ namespace EmployeeManagement.Services
             await _employeeRepository.DeleteEmployeeAsync(getEmployee);
         }
 
+        public async Task UpdateRoleAsync(int id , CreateRole updateRole)
+        {
+            var role = await _employeeRepository.GetRoleByIdAsync(id);
+            if(role == null)
+            {
+                throw new Exception("Role not found");
+            }
+
+            if(await _employeeRepository.IsRoleNameTaken(id, updateRole.RoleName))
+            {
+                throw new Exception("Role already exists");
+            }
+
+            role.RoleName = updateRole.RoleName;
+            role.UpdatedAt = DateTime.UtcNow;
+
+            await _employeeRepository.UpdateRoleAsync(role);
+        }
+
+        public async Task DeleteRoleAsync(int id)
+        {
+            var role = await _employeeRepository.GetRoleByIdAsync(id);
+            if (role == null)
+            {
+                throw new Exception("Role Not found");
+            }
+            role.IsDeleted = true; ;
+
+            await _employeeRepository.DeleteRoleAsync(role);
+        }
+
     }
 }

@@ -46,5 +46,30 @@ namespace EmployeeManagement.Repository
             await _context.SaveChangesAsync();
         }
 
+        
+        public async Task<Role> GetRoleByIdAsync(int id)
+        {
+            var role = await _context.Roles.FirstOrDefaultAsync(r=>r.RoleId == id && !r.IsDeleted);
+            return role;
+        }
+
+        public async Task<Boolean> IsRoleNameTaken(int id , string roleName)
+        {
+            var exists = await _context.Roles
+                        .AnyAsync(r => r.RoleName == roleName && r.RoleId != id && !r.IsDeleted);
+
+            return exists;
+        }
+        public async Task UpdateRoleAsync(Role role)
+        {
+            _context.Roles.Update(role);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteRoleAsync(Role role)
+        {
+            _context.Roles.Update(role);
+            await _context.SaveChangesAsync();
+        }
     }
 }
