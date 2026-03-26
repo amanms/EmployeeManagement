@@ -8,5 +8,8 @@ namespace EmployeeManagement.Services.Interfaces
         Task UpdateEmployeeAsync(int id,UpdateEmployeeDto updateEmployee);
         Task DeleteEmployeeAsync(int id);
 
+        Task UpdateRoleAsync(int id, CreateRole updateRole);
+        Task DeleteRoleAsync(int id);
+
     }
 }

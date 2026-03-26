@@ -10,5 +10,10 @@ namespace EmployeeManagement.Repository.Interfaces
         Task<Employee> GetEmployeeByIdAsync(int id);
         Task UpdateEmployeeAsync(Employee employee);
         Task DeleteEmployeeAsync(Employee employee);
+
+        Task<Role> GetRoleByIdAsync(int id);
+        Task<Boolean> IsRoleNameTaken(int id, string roleName);
+        Task UpdateRoleAsync(Role role);
+        Task DeleteRoleAsync(Role role);
     }
 }
